@@ -8,3 +8,6 @@ huggingface-hub
 python-dotenv
 numpy
 scikit-learn
+torch
+torchaudio
+torchvision
