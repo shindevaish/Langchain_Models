@@ -5,14 +5,18 @@ import os
 load_dotenv()
 
 client = InferenceClient(
-    provider="auto",
-    api_key=os.getenv("HUGGINGFACEHUB_API_TOKEN"),
+    provider="nebius",  # e.g., works for Meta Llama models
+    token=os.getenv("HF_TOKEN"),
 )
 
-resp = client.chat_completion(
-    model="meta-llama/Llama-3.1-8B-Instruct",
-    messages=[{"role": "user", "content": "What is LLM?"}],
-    max_tokens=128,
+messages = [
+    {"role": "user", "content": "What is the capital of India?"}
+]
+
+response = client.chat_completion(
+    model="meta-llama/Llama-3.1-8B-Instruct",  # pick a supported Llama model
+    messages=messages,
+    max_tokens=256,
 )
 
-print(resp.choices[0].message.content)
+print(response.choices[0].message.content)
