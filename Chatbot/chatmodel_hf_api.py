@@ -1,15 +1,18 @@
-from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
+from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
-llm = HuggingFaceEndpoint(
-    repo_id = 'meta-llama/Llama-3.2-1B-Instruct',
-    task = 'text-generation'
+client = InferenceClient(
+    provider="auto",
+    api_key=os.getenv("HUGGINGFACEHUB_API_TOKEN"),
 )
 
-model = ChatHuggingFace(llm = llm)
+resp = client.chat_completion(
+    model="meta-llama/Llama-3.1-8B-Instruct",
+    messages=[{"role": "user", "content": "What is LLM?"}],
+    max_tokens=128,
+)
 
-result = model.invoke("What is the capital of India?")
-
-print(result.content)
+print(resp.choices[0].message.content)
