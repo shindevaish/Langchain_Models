@@ -3,7 +3,10 @@ langchain-core
 langchain-google-genai
 google-generativeai
 langchain-huggingface
+langchain-models 
+langchain-openai
 transformers
+sentence-transformers
 huggingface-hub
 python-dotenv
 numpy
