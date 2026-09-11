@@ -1,4 +1,5 @@
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
+from langchain_core.output_parsers import JsonOutputParser
 from dotenv import load_dotenv
 from typing import TypedDict
 
@@ -12,14 +13,27 @@ llm = HuggingFaceEndpoint(
 
 model = ChatHuggingFace(llm=llm)
 
-# schema
 class Review(TypedDict):
+    summary: str
+    sentiment: str
 
-    summary : str
-    sentiment : str
+parser = JsonOutputParser(pydantic_object=Review)
 
-structured_model =  model.with_structured_output(Review)
+prompt = """
+You are a product review analyzer. Output ONLY valid JSON with this exact schema:
+{
+  "summary": "<one-sentence summary>",
+  "sentiment": "positive" | "negative" 
+}
 
-result = structured_model.invoke("""The hardware is great, but the software feels bloated. There are too many pre-installed apps that I can't remove. Also, the UI looks outdated compared to other brands. Hoping for a software update to fix this.""")
+Review text:
+The hardware is great, but the software feels bloated. There are too many pre-installed apps that I can't remove. Also, the UI looks outdated compared to other brands. Hoping for a software update to fix this.
+"""
 
-print(result)
+raw_response = model.invoke(prompt)
+print("Raw content:")
+print(raw_response.content)
+
+review: Review = parser.parse(raw_response.content)
+print("\nParsed Review:")
+print(review)
