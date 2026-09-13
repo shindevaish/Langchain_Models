@@ -31,9 +31,4 @@ The hardware is great, but the software feels bloated. There are too many pre-in
 """
 
 raw_response = model.invoke(prompt)
-print("Raw content:")
-print(raw_response.content)
-
-review: Review = parser.parse(raw_response.content)
-print("\nParsed Review:")
-print(review)
+print(parser.parse(raw_response.content))
