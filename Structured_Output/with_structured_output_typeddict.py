@@ -1,7 +1,7 @@
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from langchain_core.output_parsers import JsonOutputParser
 from dotenv import load_dotenv
-from typing import TypedDict
+from typing import TypedDict, Annotated
 
 load_dotenv()
 
@@ -14,8 +14,8 @@ llm = HuggingFaceEndpoint(
 model = ChatHuggingFace(llm=llm)
 
 class Review(TypedDict):
-    summary: str
-    sentiment: str
+    summary: Annotated[str, "A brief summary of the review"]
+    sentiment: Annotated[str, "The overall sentiment of the review either positive or negative"]
 
 parser = JsonOutputParser(pydantic_object=Review)
 
